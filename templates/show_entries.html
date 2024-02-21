@@ -14,6 +14,7 @@
   <form action="{{ url_for('show_entries') }}" method="post" >
     <label for="sorting">Category</label>
     <select name="choice" type="text" id="sorting">
+        <option value="None">None</option>
         {%  for choice in choice_list %}
             <option value={{ choice }}>{{ choice }}</option>
         {% endfor %}
@@ -23,7 +24,14 @@
   <p>{{ choice_list.category|safe }}</p>
   <ul class="entries">
   {% for entry in entries %}
-    <li><h2>{{ entry.title }}</h2>{{ entry.category|safe }}<p>{{ entry.text|safe }}</p></li>
+    <li><h2>{{ entry.title }}</h2>{{ entry.category|safe }}<p>{{ entry.text|safe }}</p>
+    <p>
+        <form action="/delete" method="post">
+            <input name="id" type="hidden" value="{{ entry.id }}">
+            <input type="submit" value="Delete Post">
+        </form>
+    </p>
+    </li>
   {% else %}
     <li><em>Unbelievable.  No entries here so far</em></li>
   {% endfor %}
