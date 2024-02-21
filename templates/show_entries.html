@@ -26,7 +26,6 @@
   {% for entry in entries %}
     <li><h2>{{ entry.title }}</h2>{{ entry.category|safe }}<p>{{ entry.text|safe }}</p>
     <p>
-        {{ entry.id }}
         <form action="/delete" method="post">
             <input name="id" type="hidden" value="{{ entry.id }}">
             <input type="submit" value="Delete Post">
