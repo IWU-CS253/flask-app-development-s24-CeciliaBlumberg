@@ -71,19 +71,21 @@ def show_entries():
     cat = db.execute('select distinct category from entries').fetchall()
     choice_list = []
     for entry in cat:
-        choice_list.append(entry[0])
+        if entry and entry[0].strip():
+            choice_list.append(entry[0])
     choice = request.form.get('choice')
 
-    if "choice" not in request.form:
+    if "choice" not in request.form or choice == "None":
         db = get_db()
         cur = db.execute('select title, text, category from entries order by id desc ')
         entries = cur.fetchall()
-        return render_template('show_entries.html', entries=entries, choice_list=choice_list, choice=choice)
+        return render_template('show_entries.html', entries=entries, choice_list=choice_list)
+
     else:
         db = get_db()
         cur = db.execute('select title, text, category from entries where category LIKE ? order by id desc ',  ("%" + choice + "%",))
         entries = cur.fetchall()
-        return render_template('show_entries.html', entries=entries, choice_list=choice_list, choice=choice)
+        return render_template('show_entries.html', entries=entries, choice_list=choice_list)
 
 
 @app.route('/add', methods=['POST'])
