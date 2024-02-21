@@ -77,17 +77,24 @@ def show_entries():
 
     if "choice" not in request.form or choice == "None":
         db = get_db()
-        cur = db.execute('select title, text, category from entries order by id desc ')
+        cur = db.execute('select title, text, category, id from entries order by id desc ')
         entries = cur.fetchall()
         return render_template('show_entries.html', entries=entries, choice_list=choice_list)
 
     else:
         db = get_db()
-        cur = db.execute('select title, text, category from entries where category LIKE ? order by id desc ',  ("%" + choice + "%",))
+        cur = db.execute('select title, text, category, id from entries where category LIKE ? order by id desc ',  ("%" + choice + "%",))
         entries = cur.fetchall()
         return render_template('show_entries.html', entries=entries, choice_list=choice_list)
 
-
+@app.route('/delete', methods=["POST"])
+def delete():
+    db = get_db()
+    id = request.form.get('id')
+    if id:
+        db.execute("delete from entries where id = ?", [id])
+        db.commit()
+    return redirect(url_for('show_entries'))
 @app.route('/add', methods=['POST'])
 def add_entry():
     db = get_db()
