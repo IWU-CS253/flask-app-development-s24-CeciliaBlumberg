@@ -67,17 +67,23 @@ def close_db(error):
 
 @app.route('/', methods=["GET", "POST"])
 def show_entries():
+    db = get_db()
+    cat = db.execute('select distinct category from entries').fetchall()
+    choice_list = []
+    for entry in cat:
+        choice_list.append(entry[0])
     choice = request.form.get('choice')
+
     if "choice" not in request.form:
         db = get_db()
         cur = db.execute('select title, text, category from entries order by id desc ')
         entries = cur.fetchall()
-        return render_template('show_entries.html', entries=entries, choice=choice)
+        return render_template('show_entries.html', entries=entries, choice_list=choice_list, choice=choice)
     else:
         db = get_db()
-        cur = db.execute('select title, text, category from entries where category LIKE ? order by id desc ', ("%" + choice + "%",))
+        cur = db.execute('select title, text, category from entries where category LIKE ? order by id desc ',  ("%" + choice + "%",))
         entries = cur.fetchall()
-        return render_template('show_entries.html', entries=entries, choice=choice)
+        return render_template('show_entries.html', entries=entries, choice_list=choice_list, choice=choice)
 
 
 @app.route('/add', methods=['POST'])
