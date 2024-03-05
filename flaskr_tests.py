@@ -24,7 +24,7 @@ class FlaskrTestCase(unittest.TestCase):
         rv = self.app.post('/add', data=dict(
             title='<Hello>',
             text='<strong>HTML</strong> allowed here',
-            category='A'
+            category='A category'
         ), follow_redirects=True)
         assert b'No entries here so far' not in rv.data
         assert b'&lt;Hello&gt;' in rv.data
