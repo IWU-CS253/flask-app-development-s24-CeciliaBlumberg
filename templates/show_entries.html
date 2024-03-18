@@ -31,6 +31,10 @@
             <input type="submit" value="Delete Post">
         </form>
     </p>
+        <form action="/edit" method="post">
+            <input name="id" type="hidden" value="{{ entry.id }}">
+            <input type="submit" value="edit">
+        </form>
     </li>
   {% else %}
     <li><em>Unbelievable.  No entries here so far</em></li>

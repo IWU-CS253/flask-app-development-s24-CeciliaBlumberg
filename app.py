@@ -103,3 +103,23 @@ def add_entry():
     db.commit()
     flash('New entry was successfully posted')
     return redirect(url_for('show_entries'))
+
+@app.route('/edit', methods=['POST'])
+def edit():
+    db = get_db()
+    id = request.form.get('id')
+    title = db.execute('select title from entries where id = ?', [id]).fetchall()
+    cat = db.execute('select category from entries where id = ?', [id]).fetchall()
+    text = db.execute('select text from entries where id = ?', [id]).fetchall()
+    text = text[0][0]
+    cat = cat[0][0]
+    title = title[0][0]
+    return render_template('edit.html', title=title, cat=cat, text=text, id=id)
+
+@app.route('/update_entry', methods=['POST'])
+def update_entry():
+    db = get_db()
+    id = request.form.get('id')
+    db.execute('update entries set title= ?, text = ?, category = ? where id = ?', [request.form['title'], request.form['text'], request.form['category'], id]).fetchall()
+    db.commit()
+    return redirect(url_for('show_entries'))
