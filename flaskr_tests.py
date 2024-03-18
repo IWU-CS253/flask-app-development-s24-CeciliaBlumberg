@@ -31,6 +31,58 @@ class FlaskrTestCase(unittest.TestCase):
         assert b'<strong>HTML</strong> allowed here' in rv.data
         assert b'A category' in rv.data
 
+    def test_deleting(self):
+        rv = self.app.post('/add', data=dict(
+            title='<Hello>',
+            text='<strong>HTML</strong> allowed here',
+            category='A category',
+        ), follow_redirects=True)
+        rv = self.app.post('/delete',data=dict(
+            id='1'), follow_redirects=True)
+        assert b'&lt;Hello&gt;' not in rv.data
+        assert b'<strong>HTML</strong> allowed here' not in rv.data
+        assert b'A category' not in rv.data
+
+    def test_edit(self):
+        rv = self.app.post('/add', data=dict(
+            title='<Hello>',
+            text='<strong>HTML</strong> allowed here',
+            category='A category',
+        ), follow_redirects=True)
+        rv = self.app.post('/update_entry', data=dict(
+            id='1',
+            title='<Hello_Updated>',
+            text='<strong>HTML UPDATED</strong> allowed here',
+            category='A updated category'
+        ), follow_redirects=True)
+        assert b'&lt;Hello_Updated&gt;' in rv.data
+        assert b'<strong>HTML UPDATED</strong> allowed here' in rv.data
+        assert b'A updated category' in rv.data
+        assert b'&lt;Hello&gt;' not in rv.data
+        assert b'<strong>HTML</strong> allowed here' not in rv.data
+        assert b'A category' not in rv.data
+
+    def test_sorting(self):
+        rv = self.app.post('/add', data=dict(
+            title='<Hello>',
+            text='<strong>HTML</strong> allowed here',
+            category='A category',
+        ), follow_redirects=True)
+        rv = self.app.post('/add', data=dict(
+            title='<Hello2>',
+            text='<strong>HTML2</strong> allowed here',
+            category='A category2',
+        ), follow_redirects=True)
+        rv = self.app.post('/', data=dict(
+            choice='A category2'
+        ), follow_redirects=True)
+        assert b'&lt;Hello2&gt;' in rv.data
+        assert b'<strong>HTML2</strong> allowed here' in rv.data
+        assert b'A category2' in rv.data
+        assert b'&lt;Hello&gt;' not in rv.data
+        assert b'<strong>HTML</strong> allowed here' not in rv.data
+
+
 
 
 if __name__ == '__main__':
