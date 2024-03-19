@@ -82,6 +82,17 @@ class FlaskrTestCase(unittest.TestCase):
         assert b'&lt;Hello&gt;' not in rv.data
         assert b'<strong>HTML</strong> allowed here' not in rv.data
 
+    def test_sorting_options(self):
+        rv = self.app.post('/add', data=dict(
+            title='<Hello>',
+            text='<strong>HTML</strong> allowed here',
+            category='A category',
+        ), follow_redirects=True)
+        rv = self.app.post('/', data=dict(
+            choice='A category3'
+        ), follow_redirects=True)
+        assert b'&lt;Hello&gt;' not in rv.data
+        assert b'<strong>HTML</strong> allowed here' not in rv.data
 
 
 
