@@ -1,43 +1,50 @@
 {% extends "layout.html" %}
 {% block body %}
+<div class="container mt-5">
+<div class="d-flex align-items-center">
   <form action="{{ url_for('add_entry') }}" method="post" class="add-entry">
-    <dl>
-      <dt>Title:
-      <dd><input type="text" size="30" name="title">
-      <dt>Text:
-      <dd><textarea name="text" rows="5" cols="40"></textarea>
-        <dt>Category:
-        <dd><input type="text" size="30" name="category">
-        <dd><input type="submit" value="Share">
+    <dl class="table">
+      <dt class="form-label">Title:
+      <dd><input  class="form-control" type="text" size="30" name="title">
+      <dt class="form-label">Text:
+      <dd><textarea class="form-control" name="text" rows="5" cols="40"></textarea>
+        <dt class="form-label">Category:
+        <dd><input class="form-control" type="text" size="30" name="category">
+        <dd><input type="submit" class="btn btn-success" value="Share">
     </dl>
   </form>
+    </div>
+</div>
+    <div class="container mt-5">
   <form action="{{ url_for('show_entries') }}" method="post" >
-    <label for="sorting">Category</label>
-    <select name="choice" type="text" id="sorting">
+    <label for="sorting" class="form-label">Category</label>
+    <select class="form-control" name="choice" type="text" id="sorting">
         <option value="None">None</option>
         {%  for choice in choice_list %}
             <option value={{ choice }}>{{ choice }}</option>
         {% endfor %}
     </select>
-    <input type="submit" value="Sort">
+    <input type="submit" class="btn btn-info" value="Sort">
   </form>
   <p>{{ choice_list.category|safe }}</p>
-  <ul class="entries">
+  <ul class="list-group"">
   {% for entry in entries %}
-    <li><h2>{{ entry.title }}</h2>{{ entry.category|safe }}<p>{{ entry.text|safe }}</p>
+    <li class="list-group-item"><h2>{{ entry.title }}</h2>{{ entry.category|safe }}<p>{{ entry.text|safe }}</p>
     <p>
         <form action="/delete" method="post">
             <input name="id" type="hidden" value="{{ entry.id }}">
-            <input type="submit" value="Delete Post">
+            <input type="submit" class="btn btn-danger" value="Delete Post">
         </form>
     </p>
         <form action="/edit" method="post">
             <input name="id" type="hidden" value="{{ entry.id }}">
-            <input type="submit" value="edit">
+            <input type="submit" class="btn btn-secondary" value="edit">
         </form>
     </li>
   {% else %}
-    <li><em>Unbelievable.  No entries here so far</em></li>
+    <li class="list-group-item"><em>Unbelievable.  No entries here so far</em></li>
   {% endfor %}
   </ul>
+
+    </div>
 {% endblock %}
